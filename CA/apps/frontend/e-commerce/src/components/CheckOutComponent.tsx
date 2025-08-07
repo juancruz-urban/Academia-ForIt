@@ -37,7 +37,7 @@ export function CheckOutComponent() {
       {total > 0 && (
         <div className="checkout-summary">
           <span className="checkout-total">Total a pagar: ${total.toFixed(2)}</span>
-          <button className="checkout-pay-button">Pagar</button>
+          <button onClick={()=>{alert('redirigiendo al pago...')}} className="checkout-pay-button">Pagar</button>
         </div>
       )}
     </div>

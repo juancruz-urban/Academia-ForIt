@@ -1,6 +1,6 @@
 
 import type {Cart} from '../types/index'
-import CartItemComponent from "./CartItem";
+import CartItemComponent from "./CartItemComponent";
 
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
