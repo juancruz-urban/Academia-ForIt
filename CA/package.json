@@ -1,0 +1,28 @@
+{
+  "name": "ca",
+  "version": "1.0.0",
+   "workspaces": [
+    "apps/backend"
+  ],
+   "private": true,
+  "description": "",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "node --loader ts-node/esm index.ts",
+    "test": "vitest"
+  },
+  
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.2"
+  },
+  "dependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "bcrypt": "^6.0.0"
+  }
+}

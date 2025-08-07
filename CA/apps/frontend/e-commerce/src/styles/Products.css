@@ -1,0 +1,57 @@
+.products-grid-container {
+  padding: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+/* GRID DE PRODUCTOS */
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 1200px;
+  list-style: none;
+  padding: 0;
+}
+
+/* PRODUCTO INDIVIDUAL */
+.product {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1.25rem;
+  text-align: center;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.product:hover {
+  border-color: #d1d5db;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.product h4 {
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  color: #111827;
+}
+
+.product span {
+  display: block;
+  font-size: 0.95rem;
+  color: #4b5563;
+}
+
+.product button{
+   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+}

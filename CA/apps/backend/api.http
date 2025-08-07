@@ -1,0 +1,25 @@
+### 
+POST http://localhost:3000/orders
+Content-Type: application/json
+
+{
+  "userId": "1",
+  "products": [{"quantity":2,"price":400}]
+ 
+}
+
+### 
+POST http://localhost:3000/users/register
+Content-Type: application/json
+
+{
+  "name": "richi",
+  "password": "12345",
+  "email":"gordo@hotmail.com"
+ 
+}
+
+### 
+GET http://localhost:3000/users/1
+Content-Type: application/json
+
