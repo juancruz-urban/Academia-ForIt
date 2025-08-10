@@ -15,6 +15,7 @@ export function Header() {
         <Link to="/" className="header-logo">Mi Tienda</Link>
 
         <div className="header-right">
+          <Link to={'/orders'} >Orders</Link>
           <Link to="/cart" className="cart-link">
             <CartIcon />
             <span className="cart-count">{items.length}</span>

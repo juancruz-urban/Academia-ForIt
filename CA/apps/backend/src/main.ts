@@ -23,13 +23,14 @@ import { CreateOrderItem } from '../../../domain/src/use-cases/CreateOrderItem.j
 import { GetOrderItemByOrderId } from '../../../domain/src/use-cases/GetOrderItemByOrderId.ts.js';
 import { DeleteOrderItemsByOrderId } from '../../../domain/src/use-cases/DeleteOrderItemsByOrderId.js';
 import { UpdateOrderStatus } from '../../../domain/src/use-cases/UpdateOrderStatus.js';
+import { GetOrdersByUserId } from '../../../domain/src/use-cases/GetOrdersByUserId.js';
 
 import { OrderItemRepositoryImpl } from './db/OrderItemRepositoryImpl.js';
 import { OrderItemController } from './controllers/OrderItemController.js';
 
-const app = express();
+const app = express()
 app.use(cors({origin:'*'}))
-app.use(express.json());
+app.use(express.json())
 
 
 ///////////////   ORDERS  //////////////////
@@ -39,7 +40,8 @@ const orderItemRepo = new OrderItemRepositoryImpl()
 const createOrder = new CreateOrder(orderRepo, orderItemRepo)
 const updateOrderStatus = new UpdateOrderStatus(orderRepo)
 const getOrder = new GetOrderById(orderRepo, orderItemRepo)
-const orderController = new OrderController(createOrder,getOrder,updateOrderStatus )
+const getOrderByUserId = new GetOrdersByUserId(orderRepo)
+const orderController = new OrderController(createOrder,getOrder,updateOrderStatus, getOrderByUserId )
 
 ////////// ORDER ITEMS ///////////
 const createOrderItem = new CreateOrderItem(orderItemRepo)
@@ -59,21 +61,23 @@ const userController = new UserController(
   new DeleteUser(userRepo),
   new UpdateUser(userRepo),
   new LoginUser(userRepo)
-);
+)
 
 app.post('/users/register', userController.create)
 app.post('/users/login', userController.login)
 app.get('/users/:id', userController.getById)
 app.get('/users', userController.getAll)
-app.delete('/users/:id', userController.delete);
+app.delete('/users/:id', userController.delete)
 app.put('/users/:id', userController.update)
  
 
 app.post('/orders', (req, res) => orderController.create(req, res))
 app.patch('/orders/:id/status', (req, res) => orderController.updateStatus(req, res))
+app.get("/orders/user/:userId", (req, res) => orderController.getByUserId(req, res))
 
-app.post("/order-items", orderItemController.create);
-app.get("/order-items/:orderId", orderItemController.getByOrderId);
-app.delete("/order-items/:orderId", orderItemController.deleteByOrderId);
+
+app.post("/order-items", orderItemController.create)
+app.get("/order-items/:orderId", orderItemController.getByOrderId)
+app.delete("/order-items/:orderId", orderItemController.deleteByOrderId)
 
 app.listen(3000, () => console.log('Backend corriendo en puerto 3000'))

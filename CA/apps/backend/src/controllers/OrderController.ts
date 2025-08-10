@@ -3,40 +3,54 @@ import { Request, Response } from "express";
 import { CreateOrder } from "../../../../domain/src/use-cases/CreateOrder";
 import { GetOrderById } from "../../../../domain/src/use-cases/GetOrderById";
 import { UpdateOrderStatus } from "../../../../domain/src/use-cases/UpdateOrderStatus";
+import {GetOrdersByUserId} from "../../../../domain/src/use-cases/GetOrdersByUserId"
 
 export class OrderController {
   constructor(
     private readonly createOrder: CreateOrder,
     private readonly getOrderById: GetOrderById,
-    private readonly updateOrderStatus: UpdateOrderStatus
+    private readonly updateOrderStatus: UpdateOrderStatus,
+    private readonly getOrdersByUserId: GetOrdersByUserId
   ) {}
 
   create = async (req: Request, res: Response) => {
     try {
-      const { userId, products } = req.body;
-      const order = await this.createOrder.execute(userId, products);
-      res.status(201).json(order);
+      const { userId, products } = req.body
+      const order = await this.createOrder.execute(userId, products)
+      res.status(201).json(order)
     } catch (err) {
-      res.status(500).json({ error: (err as Error).message });
+      res.status(500).json({ error: (err as Error).message })
     }
   };
 
   getById = async (req: Request, res: Response) => {
     try {
-      const order = await this.getOrderById.execute(Number(req.params.id));
-      if (!order) return res.status(404).json({ message: "Order not found" });
-      res.json(order);
+      const order = await this.getOrderById.execute(Number(req.params.id))
+      if (!order) return res.status(404).json({ message: "Order not found" })
+      res.json(order)
     } catch (err) {
-      res.status(500).json({ error: (err as Error).message });
+      res.status(500).json({ error: (err as Error).message })
     }
-  };
+  }
 
   updateStatus = async (req: Request, res: Response) => {
     try {
-      await this.updateOrderStatus.execute(Number(req.params.id), req.body.status);
-      res.status(204).send();
+      await this.updateOrderStatus.execute(Number(req.params.id), req.body.status)
+      res.status(204).send()
     } catch (err) {
-      res.status(500).json({ error: (err as Error).message });
+      res.status(500).json({ error: (err as Error).message })
     }
-  };
+  }
+
+
+  
+  async getByUserId(req: Request, res: Response) {
+    try {
+      const userId = Number(req.params.userId)
+      const orders = await this.getOrdersByUserId.execute(userId)
+      res.json(orders)
+    } catch (err) {
+      res.status(500).json({ error: "Error al obtener las órdenes" })
+    }
+  }
 }

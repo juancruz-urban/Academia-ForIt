@@ -5,6 +5,7 @@ import { ProtectedRoute } from "./routes/ProtectedRoute";
 import { Register } from "./pages/Register";
 import Cart from "./pages/Cart";
 import CheckOut from "./pages/CheckOut";
+import Orders from "./pages/Orders";
 
 const App = () => {
   return (
@@ -25,6 +26,11 @@ const App = () => {
         <Route path="/checkout" element={
           <ProtectedRoute>
             <CheckOut />
+          </ProtectedRoute>
+        } />
+         <Route path="/orders" element={
+          <ProtectedRoute>
+            <Orders />
           </ProtectedRoute>
         } />
       
