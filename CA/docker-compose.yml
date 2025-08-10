@@ -3,7 +3,7 @@
 services:
 
   frontend:
-    image: clean-demo-web:latest  
+    image: web-img:latest  
     build:
       context: .                    
       dockerfile: Dockerfile         
@@ -16,7 +16,7 @@ services:
 
   # --- BACKEND ---
   backend:
-    image: clean-demo-api:latest
+    image: api-img:latest
     ports:
       - "3000:3000"
     env_file: apps/backend/.env                 
