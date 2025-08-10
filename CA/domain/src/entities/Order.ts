@@ -1,47 +1,32 @@
-import type { OrderProduct } from "./OrderProduct";
+
+import { OrderItem } from "./OrderItem";
 
 export class Order {
   constructor(
     public readonly id: number,
-    public readonly userId: string,
-    public readonly products: OrderProduct[]=[],
-    public readonly total: number,
-    private _status:string | 'pending' | 'paid' | 'cancelled'
-    
-  ) {
+    public readonly userId: number,
+    private _status: 'pending' | 'paid' | 'cancelled' = 'pending',
+    public readonly items: OrderItem[] = []
+  ) {}
 
-     if (products.length === 0) {
-      throw new Error('La orden debe tener al menos un producto');
-    }
-
-    const calculated = Order.calculateTotal(products);
-    if (total !== calculated) {
-      throw new Error('El total no coincide con los productos');
-    }
+  get status() {
+    return this._status;
   }
 
-  static calculateTotal(products: { quantity: number; price: number }[]): number {
-    return products.reduce((sum, p) => sum + p.quantity * p.price, 0);
-  }
-
-  getStatus(){
-    return this._status
-  }
-  
   markAsPaid() {
-    if (this._status === 'paid') {
-      throw new Error('La orden ya esta pagada')
-    }
-    this._status = 'paid'
+    if (this._status === 'paid') throw new Error('Order is already paid');
+    this._status = 'paid';
   }
 
   cancel() {
-    if (this._status === 'paid') {
-      throw new Error('No se puede cancelar una orden pagada')
-    }
-    this._status = 'cancelled'
+    if (this._status === 'paid') throw new Error('Paid orders cannot be cancelled');
+    this._status = 'cancelled';
   }
+
+  calculateTotal(): number {
+    return this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
   }
+}
 
   
 

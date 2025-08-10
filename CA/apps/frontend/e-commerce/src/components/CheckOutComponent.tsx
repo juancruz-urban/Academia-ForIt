@@ -1,11 +1,34 @@
 
 import useCart from "../context/CartContext";
-import { useEffect } from "react";
+import { useEffect, useContext} from "react";
+import { AuthContext } from "../context/AuthContext";
 
 export function CheckOutComponent() {
   const { items } = useCart();
+  const {user} = useContext(AuthContext)
   const total = items.reduce((acc, curr) => acc + curr.quantity * curr.price, 0);
 
+  const sendData = async() =>{
+
+    const userId = user?.id
+    const products = items
+    if(!userId)return
+    try{
+
+      const response = await fetch("http://localhost:3000/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId:userId, products })})
+        if (!response.ok) {
+        console.log(response)
+      }
+    }catch(e){
+      console.error(e)
+    }
+    finally{
+      alert('orden creada satisfactoriamente')
+    }
+  }
   
   useEffect(() => {
   window.scrollTo(0, 0);
@@ -37,7 +60,7 @@ export function CheckOutComponent() {
       {total > 0 && (
         <div className="checkout-summary">
           <span className="checkout-total">Total a pagar: ${total.toFixed(2)}</span>
-          <button onClick={()=>{alert('redirigiendo al pago...')}} className="checkout-pay-button">Pagar</button>
+          <button onClick={sendData} className="checkout-pay-button">Pagar</button>
         </div>
       )}
     </div>

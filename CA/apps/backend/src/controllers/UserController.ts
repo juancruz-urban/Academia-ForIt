@@ -23,43 +23,44 @@ export class UserController {
 
   create = async (req: Request, res: Response) => {
     const { name,password ,email } = req.body;
-    const user = await this.createUser.execute(name, password,email);
-    res.status(201).json(user);
-  };
+    const user = await this.createUser.execute(name, password,email)
+    res.status(201).json(user)
+  }
   login = async (req:Request, res:Response)=>{
-     const {password ,email } = req.body;
-    const user = await this.loginUser.execute(email, password);
-    res.status(201).json(user);
+     const {password ,email } = req.body
+    const user = await this.loginUser.execute(email, password)
+    
+    res.status(201).json(user)
  
   }
 
   getById = async (req: Request, res: Response, next:NextFunction) => {
     try {
-      const user = await this.getUserById.execute(Number(req.params.id));
+      const user = await this.getUserById.execute(Number(req.params.id))
       if (!user) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-        return;
+        res.status(404).json({ message: 'Usuario no encontrado' })
+        return
       }
-      const safeUser: UserDTO = toUserDto(user);
-      res.json(safeUser);
+      const safeUser: UserDTO = toUserDto(user)
+      res.json(safeUser)
      
     } catch (err) {
-      next(err);
+      next(err)
     }
-  };
+  }
 
 
 getByEmail = async(req:Request, res:Response, next:NextFunction)=>{
- try{ const user = await this.getUserByEmail.execute(req.params.email);
+ try{ const user = await this.getUserByEmail.execute(req.params.email)
    if (!user) {
-        res.status(404).json({ message: 'Usuario no encontrado' });
-        return;
+        res.status(404).json({ message: 'Usuario no encontrado' })
+        return
       }
-      const safeUser: UserDTO = toUserDto(user);
-      res.json(safeUser);
+      const safeUser: UserDTO = toUserDto(user)
+      res.json(safeUser)
      
     } catch (err) {
-      next(err);
+      next(err)
     }
   }
   
@@ -69,17 +70,17 @@ getByEmail = async(req:Request, res:Response, next:NextFunction)=>{
   const users = await this.getAllUsers.execute();
   const safeUsers: UserDTO[] = users.map(toUserDto);
   res.json(safeUsers);
-};
+}
 
 
   delete = async (req: Request, res: Response) => {
-    await this.deleteUser.execute(Number(req.params.id));
-    res.status(204).send();
-  };
+    await this.deleteUser.execute(Number(req.params.id))
+    res.status(204).send()
+  }
 
   update = async (req: Request, res: Response) => {
-    const { name,email } = req.body;
-    await this.updateUser.execute(Number(req.params.id), name, email);
-    res.status(204).send();
-  };
+    const { name,email } = req.body
+    await this.updateUser.execute(Number(req.params.id), name, email)
+    res.status(204).send()
+  }
 }

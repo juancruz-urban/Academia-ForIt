@@ -2,7 +2,8 @@
   "name": "ca",
   "version": "1.0.0",
    "workspaces": [
-    "apps/backend"
+    "apps/backend",
+    "apps/frontend/e-commerce"
   ],
    "private": true,
   "description": "",

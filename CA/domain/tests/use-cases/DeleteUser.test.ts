@@ -3,7 +3,7 @@ import { DeleteUser } from '../../src/use-cases/DeleteUser';
 import { UserRepository } from '../../src/services/UserRepository';
 
 describe('DeleteUser', () => {
-  it('should call delete on repository with correct id', async () => {
+  it('deberia eliminar un usuario', async () => {
     const userRepo: UserRepository = {
       create: vi.fn(),
       getById: vi.fn(),
@@ -13,10 +13,10 @@ describe('DeleteUser', () => {
       update: vi.fn()
     };
 
-    const deleteUser = new DeleteUser(userRepo);
+    const deleteUser = new DeleteUser(userRepo)
 
-    await deleteUser.execute(1);
+    await deleteUser.execute(1)
 
-    expect(userRepo.delete).toHaveBeenCalledWith(1);
+    expect(userRepo.delete).toHaveBeenCalledWith(1)
   });
 });

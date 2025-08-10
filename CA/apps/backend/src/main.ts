@@ -1,7 +1,10 @@
 import express from 'express';
 import { OrderRepositoryImpl } from './db/OrderRepositoryImpl.js';
 import { CreateOrder } from '../../../domain/src/use-cases/CreateOrder.js';
+import { GetOrderById } from '../../../domain/src/use-cases/GetOrderById.js';
 import { OrderController } from './controllers/OrderController.js';
+
+
 import cors from 'cors'
 
 
@@ -16,6 +19,13 @@ import { LoginUser } from '../../../domain/src/use-cases/LoginUser.js';
 import { UserController } from './controllers/UserController.js';
 
 
+import { CreateOrderItem } from '../../../domain/src/use-cases/CreateOrderItem.js';
+import { GetOrderItemByOrderId } from '../../../domain/src/use-cases/GetOrderItemByOrderId.ts.js';
+import { DeleteOrderItemsByOrderId } from '../../../domain/src/use-cases/DeleteOrderItemsByOrderId.js';
+import { UpdateOrderStatus } from '../../../domain/src/use-cases/UpdateOrderStatus.js';
+
+import { OrderItemRepositoryImpl } from './db/OrderItemRepositoryImpl.js';
+import { OrderItemController } from './controllers/OrderItemController.js';
 
 const app = express();
 app.use(cors({origin:'*'}))
@@ -23,14 +33,24 @@ app.use(express.json());
 
 
 ///////////////   ORDERS  //////////////////
-const orderRepo = new OrderRepositoryImpl();
-const createOrder = new CreateOrder(orderRepo);
-const orderController = new OrderController(createOrder);
+const orderRepo = new OrderRepositoryImpl()
+const orderItemRepo = new OrderItemRepositoryImpl()
+
+const createOrder = new CreateOrder(orderRepo, orderItemRepo)
+const updateOrderStatus = new UpdateOrderStatus(orderRepo)
+const getOrder = new GetOrderById(orderRepo, orderItemRepo)
+const orderController = new OrderController(createOrder,getOrder,updateOrderStatus )
+
+////////// ORDER ITEMS ///////////
+const createOrderItem = new CreateOrderItem(orderItemRepo)
+const getOrderItem = new GetOrderItemByOrderId(orderItemRepo)
+const deleteOrderItem = new DeleteOrderItemsByOrderId(orderItemRepo)
+const orderItemController = new OrderItemController(createOrderItem,getOrderItem,deleteOrderItem)
 
 
 
 ///////////////   USERS  ////////////////
-const userRepo = new UserRepositoryImpl();
+const userRepo = new UserRepositoryImpl()
 const userController = new UserController(
   new CreateUser(userRepo),
   new GetUserById(userRepo),
@@ -41,14 +61,19 @@ const userController = new UserController(
   new LoginUser(userRepo)
 );
 
-app.post('/users/register', userController.create);
-app.post('/users/login', userController.login);
-app.get('/users/:id', userController.getById);
-app.get('/users', userController.getAll);
-app.delete('/users/:id', userController.delete); 
-app.put('/users/:id', userController.update);
+app.post('/users/register', userController.create)
+app.post('/users/login', userController.login)
+app.get('/users/:id', userController.getById)
+app.get('/users', userController.getAll)
+app.delete('/users/:id', userController.delete);
+app.put('/users/:id', userController.update)
  
 
-app.post('/orders', (req, res) => orderController.create(req, res));
+app.post('/orders', (req, res) => orderController.create(req, res))
+app.patch('/orders/:id/status', (req, res) => orderController.updateStatus(req, res))
 
-app.listen(3000, () => console.log('Backend corriendo en puerto 3000'));
+app.post("/order-items", orderItemController.create);
+app.get("/order-items/:orderId", orderItemController.getByOrderId);
+app.delete("/order-items/:orderId", orderItemController.deleteByOrderId);
+
+app.listen(3000, () => console.log('Backend corriendo en puerto 3000'))

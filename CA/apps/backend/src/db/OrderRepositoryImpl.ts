@@ -1,41 +1,34 @@
-import {Order} from '../../../../domain/src/entities/Order'
-import { OrderRepository } from '../../../../domain/src/services/OrderRepository';
-import { db } from '../config/db';
-import type { OrderProduct } from '../../../../domain/src/entities/OrderProduct';
+// backend/db/OrderRepositoryImpl.ts
+import { db } from "../config/db.js";
+import { OrderRepository } from "../../../../domain/src/services/OrderRepository.js";
+import { Order } from "../../../../domain/src/entities/Order.js";
 
 export class OrderRepositoryImpl implements OrderRepository {
-  async save(order: Order): Promise<void> {
-    console.log('Guardando orden en DB...', order);
-    // Acá iría código real para guardar en la base de datos
+  async create(order: Omit<Order, "id" | "items">): Promise<Order> {
+    const result = await db.execute({
+      sql: `INSERT INTO orders (userId, status) VALUES (?, ?)`,
+      args: [order.userId, order.status],
+    });
+
+    const id = Number(result.lastInsertRowid);
+    return new Order(id, order.userId, order.status);
+  }
+
+  async findById(id: number): Promise<Order | null> {
+    const result = await db.execute({
+      sql: `SELECT * FROM orders WHERE id = ?`,
+      args: [id],
+    });
+
+    if (result.rows.length === 0) return null;
+    const row = result.rows[0];
+    return new Order(Number(row.id), Number(row.userId), row.status as any);
   }
 
   async update(order: Order): Promise<void> {
-    
-  }
-
-  async findById(id: string): Promise<Order | null> {
-    const result = await db.execute({
-      sql:'SELECT * FROM orders WHERE id = ?',
-      args:[id]
-    })
-    if(result.rows[0].length==0){
-      throw new Error('orden no encontrada')
-    }
-
-    const row = result.rows[0]
-    
-    let products: OrderProduct[] = [];
-
-if (typeof row.products === 'string') {
-  products = JSON.parse(row.products) as OrderProduct[];
-}
-
-     return new Order(
-          Number(row.id), 
-          row.userId as string, 
-          products, 
-          row.total as number,
-          row.status as string
-        );
+    await db.execute({
+      sql: `UPDATE orders SET status = ? WHERE id = ?`,
+      args: [order.status, order.id],
+    });
   }
 }

@@ -1,0 +1,23 @@
+
+
+services:
+
+  frontend:
+    image: clean-demo-web:latest  
+    build:
+      context: .                    
+      dockerfile: Dockerfile         
+    ports:
+      - "80:80"                      
+    environment:
+      - VITE_API_URL=http://backend:3000  
+    depends_on:
+      - backend
+
+  # --- BACKEND ---
+  backend:
+    image: clean-demo-api:latest
+    ports:
+      - "3000:3000"
+    env_file: apps/backend/.env                 
+   

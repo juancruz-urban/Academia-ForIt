@@ -4,11 +4,11 @@ import { UserRepository } from '../../src/services/UserRepository';
 import { User } from '../../src/entities/User';
 
 describe('GetAllUsers', () => {
-  it('should return all users from repository', async () => {
+  it('deberia traer todos los usuarios', async () => {
     const users = [
       new User(1, 'Juan', '1234', 'juan@example.com'),
       new User(2, 'Maria', '5678', 'maria@example.com')
-    ];
+    ]
 
     const userRepo: UserRepository = {
       create: vi.fn(),
@@ -19,10 +19,10 @@ describe('GetAllUsers', () => {
       update: vi.fn()
     };
 
-    const getAllUsers = new GetAllUsers(userRepo);
+    const getAllUsers = new GetAllUsers(userRepo)
 
-    const result = await getAllUsers.execute();
+    const result = await getAllUsers.execute()
 
-    expect(result).toEqual(users);
-  });
-});
+    expect(result).toEqual(users)
+  })
+})
